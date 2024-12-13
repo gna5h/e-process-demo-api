@@ -24,7 +24,7 @@ public static class CustomerEndpoints
                 .ToListAsync()
         );
 
-        // GET /customers/1
+        // GET /customers/{id}
         group.MapGet("/{id}", async (int id, EProcessDemoContext dbContext) =>
         {
             var customer = await dbContext.Customers.FindAsync(id);
@@ -69,15 +69,15 @@ public static class CustomerEndpoints
             return Results.NoContent();
         });
 
-        // DELETE /games/1
-        // group.MapDelete("/{id}", async (int id, OrderContext dbContext) =>
-        // {
-        //     await dbContext.Games
-        //         .Where(game => game.Id == id)
-        //         .ExecuteDeleteAsync();
+        // DELETE /customers/{id}
+        group.MapDelete("/{id}", async (int id, EProcessDemoContext dbContext) =>
+        {
+            await dbContext.Customers
+                .Where(customer => customer.Id == id)
+                .ExecuteDeleteAsync();
 
-        //     return Results.NoContent();
-        // });
+            return Results.NoContent();
+        });
 
         return group;
     }
