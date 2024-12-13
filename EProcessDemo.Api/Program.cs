@@ -5,11 +5,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 var connString = builder.Configuration.GetConnectionString("OrderStore");
 
-builder.Services.AddSqlite<OrderContext>(connString);
+builder.Services.AddSqlite<EProcessDemoContext>(connString);
 
 var app = builder.Build();
 
 app.MapOrdersEndpoints();
+app.MapCustomersEndpoints();
 
 app.MigrateDb();
 

@@ -1,5 +1,6 @@
 using System;
 using EProcessDemo.Api.Data;
+using EProcessDemo.Api.Dtos;
 using EProcessDemo.Api.Entities;
 using EProcessDemo.Api.Mapping;
 using Microsoft.EntityFrameworkCore;
@@ -8,7 +9,7 @@ namespace EProcessDemo.Api.Endpoints;
 
 public static class OrdersEndpoints
 {
-    const string GetGameEndpointName = "GetGame";
+    const string GetOrderEndpointName = "GetOrder";
 
     public static RouteGroupBuilder MapOrdersEndpoints(this WebApplication app)
     {
@@ -16,7 +17,7 @@ public static class OrdersEndpoints
                         .WithParameterValidation();
 
         // GET /orders
-        group.MapGet("/", (OrderContext dbContext) =>
+        group.MapGet("/", (EProcessDemoContext dbContext) =>
             dbContext.Orders
                 .Include(order => order.Customer)
                 .Select(order => order.ToOrderSummaryDto())
@@ -32,21 +33,21 @@ public static class OrdersEndpoints
         // })
         // .WithName(GetGameEndpointName);
 
-        // POST /games
-        // group.MapPost("/", async (CreateGameDto newGame, OrderContext dbContext) =>
-        // {
+        // POST /orders
+        group.MapPost("/", async (CreateOrderDto newOrder, EProcessDemoContext dbContext) =>
+        {
 
-        //     Game game = newGame.ToEntity();
+            Order order = newOrder.ToEntity();
 
-        //     dbContext.Games.Add(game);
-        //     await dbContext.SaveChangesAsync();
+            dbContext.Orders.Add(order);
+            await dbContext.SaveChangesAsync();
 
-        //     return Results.CreatedAtRoute(
-        //         GetGameEndpointName,
-        //         new { id = game.Id },
-        //         game.ToGameDetailsDto()
-        //     );
-        // });
+            return Results.CreatedAtRoute(
+                GetOrderEndpointName,
+                new { id = order.Id },
+                order.ToOrderDetailsDto()
+            );
+        });
 
         // PUT /games
         // group.MapPut("/{id}", async (int id, UpdateGameDTO updatedGame, OrderContext dbContext) =>

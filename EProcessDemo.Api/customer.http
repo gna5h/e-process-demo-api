@@ -1,0 +1,19 @@
+GET http://localhost:5193/customers
+
+###
+POST http://localhost:5193/customers
+Content-Type: application/json
+
+{
+    "name": "Test User",
+    "email": "test.user@email.com"
+}
+
+###
+PUT http://localhost:5193/customers/5
+Content-Type: application/json
+
+{
+    "name": "Test User 5",
+    "email": "test.user5@email.com"
+}

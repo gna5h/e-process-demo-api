@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EProcessDemo.Api.Data;
 
-public class OrderContext(DbContextOptions<OrderContext> options) : DbContext(options)
+public class EProcessDemoContext(DbContextOptions<EProcessDemoContext> options) : DbContext(options)
 {
     public DbSet<Order> Orders => Set<Order>();
 
