@@ -11,4 +11,21 @@ public class EProcessDemoContext(DbContextOptions<EProcessDemoContext> options) 
     public DbSet<Customer> Customers => Set<Customer>();
 
     public DbSet<Kitchen> Kitchens => Set<Kitchen>();
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Order>()
+            .HasOne(o => o.Customer)
+            .WithMany(c => c.Orders)
+            .HasForeignKey(o => o.CustomerId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Order>()
+            .HasOne(o => o.Kitchen)
+            .WithOne(k => k.Order)
+            .HasForeignKey<Order>(o => o.KitchenId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        base.OnModelCreating(modelBuilder);
+    }
 }

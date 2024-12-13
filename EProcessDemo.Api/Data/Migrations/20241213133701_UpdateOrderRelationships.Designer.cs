@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EProcessDemo.Api.Data.Migrations
 {
     [DbContext(typeof(EProcessDemoContext))]
-    [Migration("20241213095147_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20241213133701_UpdateOrderRelationships")]
+    partial class UpdateOrderRelationships
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -83,7 +83,8 @@ namespace EProcessDemo.Api.Data.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.HasIndex("KitchenId");
+                    b.HasIndex("KitchenId")
+                        .IsUnique();
 
                     b.ToTable("Orders");
                 });
@@ -91,20 +92,30 @@ namespace EProcessDemo.Api.Data.Migrations
             modelBuilder.Entity("EProcessDemo.Api.Entities.Order", b =>
                 {
                     b.HasOne("EProcessDemo.Api.Entities.Customer", "Customer")
-                        .WithMany()
+                        .WithMany("Orders")
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("EProcessDemo.Api.Entities.Kitchen", "Kitchen")
-                        .WithMany()
-                        .HasForeignKey("KitchenId")
+                        .WithOne("Order")
+                        .HasForeignKey("EProcessDemo.Api.Entities.Order", "KitchenId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Customer");
 
                     b.Navigation("Kitchen");
+                });
+
+            modelBuilder.Entity("EProcessDemo.Api.Entities.Customer", b =>
+                {
+                    b.Navigation("Orders");
+                });
+
+            modelBuilder.Entity("EProcessDemo.Api.Entities.Kitchen", b =>
+                {
+                    b.Navigation("Order");
                 });
 #pragma warning restore 612, 618
         }

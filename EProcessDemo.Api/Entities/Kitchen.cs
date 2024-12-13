@@ -13,4 +13,6 @@ public class Kitchen
     public required string Type { get; set; }
 
     public required string Color { get; set; }
+
+    public Order? Order { get; set; }
 }
