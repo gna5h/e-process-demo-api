@@ -8,6 +8,18 @@ POST http://localhost:5193/orders
 Content-Type: application/json
 
 {
-    "name": "Test Order 1",
+    "name": "Test Order 2",
     "customerId": 1
 }
+
+###
+PUT http://localhost:5193/orders/1
+Content-Type: application/json
+
+{
+    "name": "Updated Test Order 1",
+    "customerId": 1
+}
+
+###
+DELETE  http://localhost:5193/orders/2

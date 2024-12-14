@@ -51,7 +51,7 @@ public static class OrdersEndpoints
                 {
                     return Results.BadRequest("Kitchen not found.");
                 }
-                order.Kitchen = kitchen; // Associate kitchen if it exists
+                order.Kitchen = kitchen;
             }
 
             dbContext.Orders.Add(order);
@@ -64,34 +64,42 @@ public static class OrdersEndpoints
             );
         });
 
-        // PUT /games
-        // group.MapPut("/{id}", async (int id, UpdateGameDTO updatedGame, OrderContext dbContext) =>
-        // {
-        //     var existingGame = await dbContext.Games.FindAsync(id);
+        // PUT /orders
+        group.MapPut("/{id}", async (int id, UpdateOrderDto updatedOrder, EProcessDemoContext dbContext) =>
+        {
+            var existingOrder = await dbContext.Orders.Include(o => o.Customer).FirstOrDefaultAsync(o => o.Id == id);
 
-        //     if (existingGame is null)
-        //     {
-        //         return Results.NotFound();
-        //     }
+            if (existingOrder is null)
+            {
+                return Results.NotFound($"Order with ID {id} not found.");
+            }
 
-        //     dbContext.Entry(existingGame)
-        //         .CurrentValues
-        //         .SetValues(updatedGame.ToEntity(id));
+            if (updatedOrder.CustomerId != -1)
+            {
+                var customerExists = await dbContext.Customers.AnyAsync(c => c.Id == updatedOrder.CustomerId);
+                if (!customerExists)
+                {
+                    return Results.BadRequest("Invalid CustomerId. Customer does not exist.");
+                }
+                existingOrder.CustomerId = updatedOrder.CustomerId;
+            }
 
-        //     await dbContext.SaveChangesAsync();
+            existingOrder.Name = updatedOrder.Name ?? existingOrder.Name;
 
-        //     return Results.NoContent();
-        // });
+            await dbContext.SaveChangesAsync();
 
-        // DELETE /games/1
-        // group.MapDelete("/{id}", async (int id, OrderContext dbContext) =>
-        // {
-        //     await dbContext.Games
-        //         .Where(game => game.Id == id)
-        //         .ExecuteDeleteAsync();
+            return Results.Ok(existingOrder.ToOrderDetailsDto());
+        });
 
-        //     return Results.NoContent();
-        // });
+        // DELETE /orders/{id}
+        group.MapDelete("/{id}", async (int id, EProcessDemoContext dbContext) =>
+        {
+            await dbContext.Orders
+                .Where(order => order.Id == id)
+                .ExecuteDeleteAsync();
+
+            return Results.NoContent();
+        });
 
         return group;
     }
