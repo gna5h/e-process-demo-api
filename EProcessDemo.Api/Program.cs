@@ -11,6 +11,7 @@ var app = builder.Build();
 
 app.MapOrdersEndpoints();
 app.MapCustomersEndpoints();
+app.MapKitchensEndpoints();
 
 app.MigrateDb();
 
