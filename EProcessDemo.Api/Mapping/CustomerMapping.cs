@@ -35,7 +35,7 @@ public static class CustomerMapping
         );
     }
 
-    public static CustomerDetailsDto ToOrderDetailsDto(this Customer customer)
+    public static CustomerDetailsDto ToCustomerDetailsDto(this Customer customer)
     {
         return new(
             customer.Id,

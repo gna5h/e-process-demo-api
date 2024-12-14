@@ -30,7 +30,7 @@ public static class CustomerEndpoints
             var customer = await dbContext.Customers.FindAsync(id);
 
             return customer is not null
-                ? Results.Ok(customer.ToOrderDetailsDto())
+                ? Results.Ok(customer.ToCustomerDetailsDto())
                 : Results.NotFound();
         }).WithName(GetCustomerEndpointName);
 
@@ -46,7 +46,7 @@ public static class CustomerEndpoints
             return Results.CreatedAtRoute(
                 GetCustomerEndpointName,
                 new { id = customer.Id },
-                customer.ToOrderDetailsDto()
+                customer.ToCustomerDetailsDto()
             );
         });
 
