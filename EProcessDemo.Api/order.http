@@ -1,1 +1,13 @@
 GET http://localhost:5193/orders
+
+###
+GET http://localhost:5193/orders/1
+
+###
+POST http://localhost:5193/orders
+Content-Type: application/json
+
+{
+    "name": "Test Order 1",
+    "customerId": 1
+}

@@ -10,7 +10,7 @@ public class Order
     public int CustomerId { get; set; }
     public Customer? Customer { get; set; }
 
-    public int KitchenId { get; set; }
+    public int? KitchenId { get; set; }
     public Kitchen? Kitchen { get; set; }
 
 }
